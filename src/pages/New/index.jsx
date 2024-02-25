@@ -24,16 +24,18 @@ export default function New() {
     event.preventDefault();
 
     const data = new FormData();
-    const user_id = localStorage.getItem('user');
+    const user_id = localStorage.getItem('user_id');
+
+    const techsArray = techs.split(',')
+    console.log(techsArray)
 
     data.append('thumbnail', thumbnail);
     data.append('company', company);
-    data.append('techs', techs);
+    data.append('techs', techsArray);
     data.append('price', price);
+    data.append('user_id', user_id);
 
-    await api.post('/spots', data, {
-      headers: { user_id }
-    })
+    await api.post('/spots', data)
 
     navigate('/dashboard');
   }

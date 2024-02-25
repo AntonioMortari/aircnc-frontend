@@ -6,7 +6,7 @@ import {
 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-// import New from './pages/New';
+import New from './pages/New';
 
 export default function Root() {
   return (
@@ -14,7 +14,7 @@ export default function Root() {
       <Routes>
         <Route path="/" exact element={<Login />} />
         <Route path="/dashboard" element={ <Dashboard />} />
-        {/* <Route path="/new" element={ <New/>} /> */}
+        <Route path="/new" element={ <New/>} />
       </Routes>
     </Router>
   );
