@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import { isAxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,13 +12,21 @@ export default function Login() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const response = await api.post('/users', { email });
-    
-    const id  = response.data;
+    try {
+      const response = await api.post('/users', { email });
 
-    localStorage.setItem('user_id', id);
+      const id = response.data;
 
-    navigate('/dashboard');
+      localStorage.setItem('user_id', id);
+
+      navigate('/dashboard');
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response.data.error.message)
+      } else {
+        toast.error('Error. Try later')
+      }
+    }
   }
 
   return (
@@ -27,9 +37,9 @@ export default function Login() {
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">E-MAIL *</label>
-        <input 
-          id="email" 
-          type="email" 
+        <input
+          id="email"
+          type="email"
           placeholder="Seu melhor e-mail"
           value={email}
           onChange={event => setEmail(event.target.value)}
