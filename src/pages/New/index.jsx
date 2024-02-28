@@ -1,4 +1,4 @@
-import  { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import api from '../../services/api';
@@ -16,7 +16,7 @@ export default function New() {
 
   // useMemo, memoriza em uma variável o valor de outra variável
   const preview = useMemo(() => {
-                        // URL variável do html temporária
+    // URL variável do html temporária
     return thumbnail ? URL.createObjectURL(thumbnail) : null;
   }, [thumbnail])
 
@@ -26,16 +26,18 @@ export default function New() {
     const data = new FormData();
     const user_id = localStorage.getItem('user_id');
 
-    const techsArray = techs.split(',')
-    console.log(techsArray)
+    const techsArray = techs.split(',').map(tech => tech.trim());
+
+    techsArray.forEach(tech => {
+      data.append('techs[]', tech);
+    });
 
     data.append('thumbnail', thumbnail);
     data.append('company', company);
-    data.append('techs', techsArray);
     data.append('price', price);
     data.append('user_id', user_id);
 
-    await api.post('/spots', data)
+    await api.post('/spots', data);
 
     navigate('/dashboard');
   }
@@ -43,18 +45,18 @@ export default function New() {
   return (
     <form onSubmit={handleSubmit}>
       {/* Na label foi colocada o useMemo() preview como background  */}
-      <label 
-        id="thumbnail" 
+      <label
+        id="thumbnail"
         style={{ backgroundImage: `url(${preview})` }}
         className={thumbnail ? 'has-thumbnail' : ''}
-      > 
-      {/* no event.target.files[0] pega a posição 0 do array que tem em files, capturando o nome do arquivo */}
+      >
+        {/* no event.target.files[0] pega a posição 0 do array que tem em files, capturando o nome do arquivo */}
         <input type="file" onChange={event => setThumbnail(event.target.files[0])} />
         <img src={camera} alt="Select img" />
       </label>
 
       <label htmlFor="company">EMPRESA *</label>
-      <input 
+      <input
         id="company"
         placeholder="Sua empresa incrível"
         value={company}
@@ -62,7 +64,7 @@ export default function New() {
       />
 
       <label htmlFor="techs">TECNOLOGIAS * <span>(separadas por vírgula)</span></label>
-      <input 
+      <input
         id="techs"
         placeholder="Quais tecnologias usam?"
         value={techs}
@@ -70,7 +72,7 @@ export default function New() {
       />
 
       <label htmlFor="price">VALOR DA DIÁRIA * <span>(em branco para GRATUITO)</span></label>
-      <input 
+      <input
         id="price"
         placeholder="Valor cobrado por dia"
         value={price}
