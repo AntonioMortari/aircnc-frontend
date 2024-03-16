@@ -22,7 +22,8 @@ export default function Login() {
       navigate('/dashboard');
     } catch (error) {
       if (isAxiosError(error)) {
-        toast.error(error.response.data.error.message)
+        console.log(error);
+        toast.error(error.response.data.error.message);
       } else {
         toast.error('Error. Try later')
       }
